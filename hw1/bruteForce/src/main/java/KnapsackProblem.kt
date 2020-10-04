@@ -1,4 +1,3 @@
-import java.io.File
 import java.lang.Integer.max
 
 data class KnapsackProblem(
@@ -32,6 +31,9 @@ data class Item(val weight: Int, val price: Int)
 
 //todo read from file
 fun main() {
+
+    val validator = Validator()
+    validator.validate("example/NR")
 
 //    val nInstances = listOf(4, 10, 15, 20, 22, 25, 27, 30, 32, 35, 37, 40)
 //    val prices = InputReader.parseSolution("example/NR/NK32_sol.dat")
