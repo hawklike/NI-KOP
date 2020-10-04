@@ -1,0 +1,1 @@
+data class Task(val name: String, val instances: List<KnapsackProblem>)
