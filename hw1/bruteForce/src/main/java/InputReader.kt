@@ -28,7 +28,7 @@ class InputReader(private val base: String) {
             for(i in 4 until data.size step 2) {
                 items.add(Item(data[i].toInt(), data[i+1].toInt()))
             }
-            problems.add(KnapsackProblem(id, nItems, maxWeight, minPrice, items))
+            problems.add(KnapsackProblem(id, maxWeight, minPrice, items))
         }
         return Pair(problems, nItems)
     }
