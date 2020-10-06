@@ -8,7 +8,7 @@ data class Task(val file: File, val instances: List<KnapsackProblem>, val nItems
     }
 }
 
-data class Solution(val file: File, val solutions: List<KnapsackSolution>, val nItems: Int): Comparable<Solution> {
+data class Solution(val file: File, val solutions: List<KnapsackReferenceSolution>, val nItems: Int): Comparable<Solution> {
     override fun compareTo(other: Solution): Int {
         return compareBy<Solution> {
             it.nItems
@@ -16,5 +16,5 @@ data class Solution(val file: File, val solutions: List<KnapsackSolution>, val n
     }
 }
 
-data class KnapsackSolution(val id: Int, val bestPrice: Int)
+data class KnapsackReferenceSolution(val id: Int, val bestPrice: Int)
 

@@ -44,15 +44,15 @@ class InputReader(private val base: String) {
         return tasks?.sorted() ?: emptyList()
     }
 
-    private fun getSolution(file: File): Pair<List<KnapsackSolution>, Int> {
-        val solutions = mutableListOf<KnapsackSolution>()
+    private fun getSolution(file: File): Pair<List<KnapsackReferenceSolution>, Int> {
+        val solutions = mutableListOf<KnapsackReferenceSolution>()
         var nItems = 0
         file.forEachLine { line ->
             val data = line.split(" ")
             val id = kotlin.math.abs(data[0].toInt())
             nItems = data[1].toInt()
             val bestPrice = data[2].toInt()
-            solutions.add(KnapsackSolution(id, bestPrice))
+            solutions.add(KnapsackReferenceSolution(id, bestPrice))
         }
         return Pair(solutions, nItems)
     }

@@ -1,0 +1,1 @@
+data class Item(val weight: Int, val price: Int)
