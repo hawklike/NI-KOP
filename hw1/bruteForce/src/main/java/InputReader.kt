@@ -1,5 +1,6 @@
 import java.io.File
 
+@ExperimentalUnsignedTypes
 class InputReader(private val base: String) {
 
     fun initKnapsackProblems(): List<Task> {

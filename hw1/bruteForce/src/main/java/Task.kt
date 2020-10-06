@@ -1,5 +1,6 @@
 import java.io.File
 
+@ExperimentalUnsignedTypes
 data class Task(val file: File, val instances: List<KnapsackProblem>, val nItems: Int) : Comparable<Task> {
     override fun compareTo(other: Task): Int {
         return compareBy<Task> {
