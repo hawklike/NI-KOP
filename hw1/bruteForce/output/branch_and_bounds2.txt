@@ -1,0 +1,42 @@
+//////// TASK: NR4_inst.dat ////////
+bruteforce: false
+n: 4
+total iterations: 2663
+avg iterations: 5
+
+//////// TASK: NR10_inst.dat ////////
+bruteforce: false
+n: 10
+total iterations: 132494
+avg iterations: 264
+
+//////// TASK: NR15_inst.dat ////////
+bruteforce: false
+n: 15
+total iterations: 4153379
+avg iterations: 8306
+
+//////// TASK: NR20_inst.dat ////////
+bruteforce: false
+n: 20
+total iterations: 143200941
+avg iterations: 286401
+
+//////// TASK: NR22_inst.dat ////////
+bruteforce: false
+n: 22
+total iterations: 504115472
+avg iterations: 1008230
+
+//////// TASK: NR25_inst.dat ////////
+bruteforce: false
+n: 25
+total iterations: 4334400814
+avg iterations: 8668801
+
+//////// TASK: NR27_inst.dat ////////
+bruteforce: false
+n: 27
+total iterations: 16963217146
+avg iterations: 33926434
+
