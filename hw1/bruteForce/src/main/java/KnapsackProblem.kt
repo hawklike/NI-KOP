@@ -38,17 +38,24 @@ data class KnapsackProblem(
         if(actualPrice >= minPrice) branchAndBoundFound = true
         if(branchAndBoundFound) return Result(actualPrice, 1u)
 
-        if(n == -1) {
-            return if(actualWeight <= maxWeight) Result(actualPrice, 1u)
-            else Result(0, 1u)
-        }
+        //all items are tried
+        if(n == -1) return Result(actualPrice, 1u)
 
+        //rest items are still below minimal price
+        if(bound(actualPrice + items[n].price, n)) return Result(actualPrice, 1u)
+
+        //current item is too heavy with previous items, do not add this item into the bag
         if(actualWeight + items[n].weight > maxWeight) return branchAndBoundSolver(actualWeight, actualPrice, n - 1)
 
+        //try it with and without current item
         return max(
                 branchAndBoundSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
                 branchAndBoundSolver(actualWeight, actualPrice, n - 1)
         )
+    }
+
+    private fun bound(actualPrice: Int, n: Int): Boolean {
+        return (actualPrice + items.take(n).sumBy { it.price }) < minPrice
     }
 
     private fun max(solver: Result, solver1: Result): Result {
