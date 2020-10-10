@@ -33,27 +33,27 @@ class InputReader(private val base: String) {
         return Pair(problems, nItems)
     }
 
-    fun prepareSolutions(): List<Solution> {
+    fun prepareSolutions(): List<Reference> {
         val files = getFiles(Regex("NK.*"))
 
-        val tasks = files?.fold(mutableListOf<Solution>()) { acc, file ->
+        val tasks = files?.fold(mutableListOf<Reference>()) { acc, file ->
             val parsed = getSolution(file)
-            acc.add(Solution(file, parsed.first, parsed.second))
+            acc.add(Reference(file, parsed.first, parsed.second))
             acc
         }
 
         return tasks?.sorted() ?: emptyList()
     }
 
-    private fun getSolution(file: File): Pair<List<KnapsackReferenceSolution>, Int> {
-        val solutions = mutableListOf<KnapsackReferenceSolution>()
+    private fun getSolution(file: File): Pair<List<KnapsackReference>, Int> {
+        val solutions = mutableListOf<KnapsackReference>()
         var nItems = 0
         file.forEachLine { line ->
             val data = line.split(" ")
             val id = kotlin.math.abs(data[0].toInt())
             nItems = data[1].toInt()
             val bestPrice = data[2].toInt()
-            solutions.add(KnapsackReferenceSolution(id, bestPrice))
+            solutions.add(KnapsackReference(id, bestPrice))
         }
         return Pair(solutions, nItems)
     }

@@ -1,22 +1,39 @@
 import java.io.File
 
 @ExperimentalUnsignedTypes
-class Statistics {
+class Statistics(dataBase: String) {
+
+    private var outputBase: String = when(dataBase) {
+        Configuration.DATA_BASE_FOLDER_NR -> {
+            "${Configuration.OUTPUT_BASE_FILE}/NR"
+        }
+        Configuration.DATA_BASE_FOLDER_ZR -> {
+            "${Configuration.OUTPUT_BASE_FILE}/ZR"
+        }
+        else -> {
+            Configuration.OUTPUT_BASE_FILE
+        }
+    }
 
     @Suppress("ConstantConditionIf")
     fun printToFile(
             task: TaskStats,
-            filename: String = if(Configuration.IS_BRUTEFORCE) Configuration.OUTPUT_FILENAME_NAIVE else Configuration.OUTPUT_FILENAME_BETTER
+            filename: String = when(task.method) {
+                KnapsackProblem.Method.BRUTEFORCE -> Configuration.OUTPUT_FILENAME_BRUTEFORCE
+                KnapsackProblem.Method.SMART_BRUTEFORCE -> Configuration.OUTPUT_FILENAME_SMART_BRUTEFORCE
+                KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
+            }
     ) {
         val output = """
             //////// TASK: ${task.task.name} ////////
-            bruteforce: ${task.bruteforce}
+            method: ${task.method}
             n: ${task.nInstances}
             total iterations: ${task.iterations}
-            avg iterations: ${task.iterations / 500u}
+            avg iterations: ${task.avgIterations}
+            max iterations: ${task.maxIterations}
         """.trimIndent()
 
-        OutputWriter(filename).appendToEnd(output + "\n")
+        OutputWriter(outputBase, filename).appendToEnd(output + "\n")
     }
 }
 
@@ -26,6 +43,8 @@ data class TaskStats(
         val task: File,
         val nInstances: Int,
         val iterations: ULong,
-        val bruteforce: Boolean,
+        val avgIterations: ULong,
+        val maxIterations: ULong,
+        val method: KnapsackProblem.Method,
         val time: Double? = null
 )

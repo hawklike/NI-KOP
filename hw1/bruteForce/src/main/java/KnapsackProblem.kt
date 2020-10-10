@@ -6,16 +6,23 @@ data class KnapsackProblem(
         var items: List<Item>
 ) {
 
-    fun compute(bruteForce: Boolean): Pair<Boolean, ULong> {
-        return if(bruteForce) {
-            with(bruteForceSolver(0, 0, items.size - 1)) {
-                Pair(price >= minPrice, iterations)
+    fun compute(method: Method): KnapsackSolution<*> {
+        return when(method) {
+            Method.BRUTEFORCE -> {
+                with(bruteForceSolver(0, 0, items.size - 1)) {
+                    KnapsackSolution(price >= minPrice, iterations)
+                }
             }
-        }
-        else {
-            items = items.filter { it.weight <= maxWeight }
-            with(branchAndBoundSolver(0, 0, items.size - 1)) {
-                Pair(price >= minPrice, iterations)
+            Method.SMART_BRUTEFORCE -> {
+                with(smartBruteForceSolver(0, 0, items.size - 1)) {
+                    KnapsackSolution(price >= minPrice, iterations)
+                }
+            }
+            Method.BRANCH_AND_BOUND -> {
+                items = items.filter { it.weight <= maxWeight }
+                with(branchAndBoundSolver(0, 0, items.size - 1)) {
+                    KnapsackSolution(price >= minPrice, iterations)
+                }
             }
         }
     }
@@ -29,6 +36,20 @@ data class KnapsackProblem(
         return max(
                 bruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
                 bruteForceSolver(actualWeight, actualPrice, n - 1)
+        )
+    }
+
+    private fun smartBruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Result {
+        if(n == -1) {
+            return if(actualWeight <= maxWeight) Result(actualPrice, 1u)
+            else Result(0, 1u)
+        }
+
+        if(actualWeight + items[n].weight > maxWeight) return branchAndBoundSolver(actualWeight, actualPrice, n - 1)
+
+        return max(
+                smartBruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
+                smartBruteForceSolver(actualWeight, actualPrice, n - 1)
         )
     }
 
@@ -64,6 +85,12 @@ data class KnapsackProblem(
     }
 
     inner class Result(val price: Int, var iterations: ULong)
+
+    enum class Method {
+        BRUTEFORCE,
+        SMART_BRUTEFORCE,
+        BRANCH_AND_BOUND
+    }
 }
 
 

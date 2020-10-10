@@ -1,6 +1,10 @@
+@ExperimentalUnsignedTypes
 object Configuration {
-    const val OUTPUT_FILENAME_NAIVE = "output/bruteforce.txt"
-    const val OUTPUT_FILENAME_BETTER = "output/branch_and_bounds2.txt"
-    const val DATA_BASE_FOLDER = "example/NR"
-    const val IS_BRUTEFORCE = false
+    const val OUTPUT_FILENAME_BRUTEFORCE = "bruteforce.txt"
+    const val OUTPUT_FILENAME_SMART_BRUTEFORCE = "smart_bruteforce.txt"
+    const val OUTPUT_FILENAME_BRANCH_AND_BOUND = "branch_and_bound.txt"
+    const val OUTPUT_BASE_FILE = "output"
+    const val DATA_BASE_FOLDER_NR = "example/NR"
+    const val DATA_BASE_FOLDER_ZR = "example/ZR"
+
 }
