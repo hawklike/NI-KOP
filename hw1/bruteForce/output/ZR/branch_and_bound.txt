@@ -1,0 +1,72 @@
+//////// TASK: ZR4_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 4
+time: 0.004110581 s
+total iterations: 5639
+avg iterations: 11
+max iterations: 22
+
+//////// TASK: ZR10_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 10
+time: 0.015782671 s
+total iterations: 128635
+avg iterations: 257
+max iterations: 804
+
+//////// TASK: ZR15_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 15
+time: 0.120850214 s
+total iterations: 2313678
+avg iterations: 4627
+max iterations: 17664
+
+//////// TASK: ZR20_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 20
+time: 2.344770462 s
+total iterations: 47425136
+avg iterations: 94850
+max iterations: 411278
+
+//////// TASK: ZR22_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 22
+time: 8.567090229 s
+total iterations: 149192257
+avg iterations: 298384
+max iterations: 1381876
+
+//////// TASK: ZR25_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 25
+time: 50.333180304 s
+total iterations: 965381508
+avg iterations: 1930763
+max iterations: 9791252
+
+//////// TASK: ZR27_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 27
+time: 168.173682497 s
+total iterations: 3108404867
+avg iterations: 6216809
+max iterations: 33813372
+
+//////// TASK: ZR30_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 30
+time: 1023.495198927 s
+total iterations: 18596234558
+avg iterations: 37192469
+max iterations: 208519987
+
+//////// TASK: ZR32_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 32
+time: 3824.624815634 s
+total iterations: 69390959393
+avg iterations: 138781918
+max iterations: 763402691
+

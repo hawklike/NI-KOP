@@ -1,0 +1,64 @@
+//////// TASK: NR4_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 4
+time: 0.005545728 s
+total iterations: 5901
+avg iterations: 11
+max iterations: 30
+
+//////// TASK: NR10_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 10
+time: 0.014129053 s
+total iterations: 292353
+avg iterations: 584
+max iterations: 2046
+
+//////// TASK: NR15_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 15
+time: 0.088335508 s
+total iterations: 8855446
+avg iterations: 17710
+max iterations: 65533
+
+//////// TASK: NR20_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 20
+time: 1.504352088 s
+total iterations: 298476331
+avg iterations: 596952
+max iterations: 2097150
+
+//////// TASK: NR22_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 22
+time: 5.28024759 s
+total iterations: 1054249621
+avg iterations: 2108499
+max iterations: 8388604
+
+//////// TASK: NR25_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 25
+time: 38.495850559 s
+total iterations: 9018052110
+avg iterations: 18036104
+max iterations: 67108863
+
+//////// TASK: NR27_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 27
+time: 146.924710264 s
+total iterations: 35158493658
+avg iterations: 70316987
+max iterations: 268435454
+
+//////// TASK: NR30_inst.dat ////////
+method: SMART_BRUTEFORCE
+n: 30
+time: 1192.444978049 s
+total iterations: 244369707804
+avg iterations: 488739415
+max iterations: 2147483645
+

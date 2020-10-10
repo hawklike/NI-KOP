@@ -1,0 +1,288 @@
+//////// TASK: NR4_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 4
+time: 0.034979585
+total iterations: 1985
+avg iterations: 3
+max iterations: 19
+
+//////// TASK: NR10_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 10
+time: 0.020428713
+total iterations: 7929
+avg iterations: 15
+max iterations: 349
+
+//////// TASK: NR15_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 15
+time: 0.026040927
+total iterations: 34659
+avg iterations: 69
+max iterations: 2689
+
+//////// TASK: NR20_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 20
+time: 0.055926913
+total iterations: 229514
+avg iterations: 459
+max iterations: 37336
+
+//////// TASK: NR22_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 22
+time: 0.092049937
+total iterations: 522022
+avg iterations: 1044
+max iterations: 68504
+
+//////// TASK: NR25_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 25
+time: 0.373264852
+total iterations: 2527291
+avg iterations: 5054
+max iterations: 599627
+
+//////// TASK: NR27_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 27
+time: 0.581318177
+total iterations: 4058853
+avg iterations: 8117
+max iterations: 691773
+
+//////// TASK: NR30_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 30
+time: 1.615575648
+total iterations: 12703500
+avg iterations: 25407
+max iterations: 2479005
+
+//////// TASK: NR32_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 32
+time: 4.691968913
+total iterations: 54708276
+avg iterations: 109416
+max iterations: 10627374
+
+//////// TASK: NR35_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 35
+time: 31.485424712
+total iterations: 346602248
+avg iterations: 693204
+max iterations: 99476452
+
+//////// TASK: NR37_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 37
+time: 38.532652095
+total iterations: 356844920
+avg iterations: 713689
+max iterations: 60525766
+
+//////// TASK: NR40_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 40
+time: 194.603331301
+total iterations: 1869703145
+avg iterations: 3739406
+max iterations: 735126492
+
+//////// TASK: NR4_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 4
+time: 0.037960356 s
+total iterations: 1985
+avg iterations: 3
+max iterations: 19
+
+//////// TASK: NR10_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 10
+time: 0.019874477 s
+total iterations: 7929
+avg iterations: 15
+max iterations: 349
+
+//////// TASK: NR15_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 15
+time: 0.034898773 s
+total iterations: 34659
+avg iterations: 69
+max iterations: 2689
+
+//////// TASK: NR20_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 20
+time: 0.072259186 s
+total iterations: 229514
+avg iterations: 459
+max iterations: 37336
+
+//////// TASK: NR22_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 22
+time: 0.114037992 s
+total iterations: 522022
+avg iterations: 1044
+max iterations: 68504
+
+//////// TASK: NR25_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 25
+time: 0.426944187 s
+total iterations: 2527291
+avg iterations: 5054
+max iterations: 599627
+
+//////// TASK: NR27_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 27
+time: 0.688423275 s
+total iterations: 4058853
+avg iterations: 8117
+max iterations: 691773
+
+//////// TASK: NR30_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 30
+time: 1.959340539 s
+total iterations: 12703500
+avg iterations: 25407
+max iterations: 2479005
+
+//////// TASK: NR32_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 32
+time: 5.862680141 s
+total iterations: 54708276
+avg iterations: 109416
+max iterations: 10627374
+
+//////// TASK: NR35_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 35
+time: 39.426920902 s
+total iterations: 346602248
+avg iterations: 693204
+max iterations: 99476452
+
+//////// TASK: NR37_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 37
+time: 47.785636975 s
+total iterations: 356844920
+avg iterations: 713689
+max iterations: 60525766
+
+//////// TASK: NR40_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 40
+time: 256.425147089 s
+total iterations: 1869703145
+avg iterations: 3739406
+max iterations: 735126492
+
+//////// TASK: NR4_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 4
+time: 0.031768348 s
+total iterations: 1985
+avg iterations: 3
+max iterations: 19
+
+//////// TASK: NR10_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 10
+time: 0.018931898 s
+total iterations: 7929
+avg iterations: 15
+max iterations: 349
+
+//////// TASK: NR15_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 15
+time: 0.046952647 s
+total iterations: 34659
+avg iterations: 69
+max iterations: 2689
+
+//////// TASK: NR20_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 20
+time: 0.14650201 s
+total iterations: 229514
+avg iterations: 459
+max iterations: 37336
+
+//////// TASK: NR22_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 22
+time: 0.113052782 s
+total iterations: 522022
+avg iterations: 1044
+max iterations: 68504
+
+//////// TASK: NR25_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 25
+time: 0.4442881 s
+total iterations: 2527291
+avg iterations: 5054
+max iterations: 599627
+
+//////// TASK: NR27_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 27
+time: 0.679763088 s
+total iterations: 4058853
+avg iterations: 8117
+max iterations: 691773
+
+//////// TASK: NR30_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 30
+time: 1.971521914 s
+total iterations: 12703500
+avg iterations: 25407
+max iterations: 2479005
+
+//////// TASK: NR32_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 32
+time: 5.892188777 s
+total iterations: 54708276
+avg iterations: 109416
+max iterations: 10627374
+
+//////// TASK: NR35_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 35
+time: 39.820958921 s
+total iterations: 346602248
+avg iterations: 693204
+max iterations: 99476452
+
+//////// TASK: NR37_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 37
+time: 47.29754934 s
+total iterations: 356844920
+avg iterations: 713689
+max iterations: 60525766
+
+//////// TASK: NR40_inst.dat ////////
+method: BRANCH_AND_BOUND
+n: 40
+time: 257.152775892 s
+total iterations: 1869703145
+avg iterations: 3739406
+max iterations: 735126492
+
