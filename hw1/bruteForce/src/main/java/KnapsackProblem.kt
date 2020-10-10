@@ -1,3 +1,5 @@
+import kotlin.math.max
+
 @ExperimentalUnsignedTypes
 data class KnapsackProblem(
         val id: Int,
@@ -5,32 +7,33 @@ data class KnapsackProblem(
         val minPrice: Int,
         var items: List<Item>
 ) {
+    private var iterations: ULong = 0U
+    private var solutionFound = false
 
     fun compute(method: Method): KnapsackSolution<*> {
         return when(method) {
             Method.BRUTEFORCE -> {
-                with(bruteForceSolver(0, 0, items.size - 1)) {
-                    KnapsackSolution(price >= minPrice, iterations)
-                }
+                val price = bruteForceSolver(0, 0, items.size - 1)
+                KnapsackSolution(price >= minPrice, iterations)
             }
             Method.SMART_BRUTEFORCE -> {
-                with(smartBruteForceSolver(0, 0, items.size - 1)) {
-                    KnapsackSolution(price >= minPrice, iterations)
-                }
+                val price = smartBruteForceSolver(0, 0, items.size - 1)
+                KnapsackSolution(price >= minPrice, iterations)
             }
             Method.BRANCH_AND_BOUND -> {
                 items = items.filter { it.weight <= maxWeight }
-                with(branchAndBoundSolver(0, 0, items.size - 1)) {
-                    KnapsackSolution(price >= minPrice, iterations)
-                }
+                val price = branchAndBoundSolver(0, 0, items.size - 1)
+                KnapsackSolution(price >= minPrice, iterations)
             }
         }
     }
 
-    private fun bruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Result {
+    private fun bruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
+        iterations++
+
         if(n == -1) {
-            return if(actualWeight <= maxWeight) Result(actualPrice, 1u)
-            else Result(0, 1u)
+            return if(actualWeight <= maxWeight) actualPrice
+            else 0
         }
 
         return max(
@@ -39,13 +42,18 @@ data class KnapsackProblem(
         )
     }
 
-    private fun smartBruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Result {
+    private fun smartBruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
+        iterations++
+
+        if(actualPrice >= minPrice) solutionFound = true
+        if(solutionFound) return actualPrice
+
         if(n == -1) {
-            return if(actualWeight <= maxWeight) Result(actualPrice, 1u)
-            else Result(0, 1u)
+            return if(actualWeight <= maxWeight) actualPrice
+            else 0
         }
 
-        if(actualWeight + items[n].weight > maxWeight) return branchAndBoundSolver(actualWeight, actualPrice, n - 1)
+        if(actualWeight + items[n].weight > maxWeight) return smartBruteForceSolver(actualWeight, actualPrice, n - 1)
 
         return max(
                 smartBruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
@@ -53,17 +61,17 @@ data class KnapsackProblem(
         )
     }
 
-    private var branchAndBoundFound = false
+    private fun branchAndBoundSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
+        iterations++
 
-    private fun branchAndBoundSolver(actualWeight: Int, actualPrice: Int, n: Int): Result {
-        if(actualPrice >= minPrice) branchAndBoundFound = true
-        if(branchAndBoundFound) return Result(actualPrice, 1u)
+        if(actualPrice >= minPrice) solutionFound = true
+        if(solutionFound) return actualPrice
 
         //all items are tried
-        if(n == -1) return Result(actualPrice, 1u)
+        if(n == -1) return actualPrice
 
         //rest items are still below minimal price
-        if(bound(actualPrice + items[n].price, n)) return Result(actualPrice, 1u)
+        if(bound(actualPrice + items[n].price, n)) return actualPrice
 
         //current item is too heavy with previous items, do not add this item into the bag
         if(actualWeight + items[n].weight > maxWeight) return branchAndBoundSolver(actualWeight, actualPrice, n - 1)
@@ -78,13 +86,6 @@ data class KnapsackProblem(
     private fun bound(actualPrice: Int, n: Int): Boolean {
         return (actualPrice + items.take(n).sumBy { it.price }) < minPrice
     }
-
-    private fun max(solver: Result, solver1: Result): Result {
-        return if(solver.price >= solver1.price) solver.apply { iterations += solver1.iterations }
-        else solver1.apply { iterations += solver.iterations }
-    }
-
-    inner class Result(val price: Int, var iterations: ULong)
 
     enum class Method {
         BRUTEFORCE,

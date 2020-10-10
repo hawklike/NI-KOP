@@ -50,5 +50,5 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
     val validator = Validator()
-    validator.validate(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.BRUTEFORCE)
+    validator.validate(Configuration.DATA_BASE_FOLDER_ZR, KnapsackProblem.Method.BRANCH_AND_BOUND)
 }

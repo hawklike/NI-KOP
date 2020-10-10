@@ -4,7 +4,9 @@ import java.io.File
 class InputReader(private val base: String) {
 
     fun initKnapsackProblems(): List<Task> {
-        val files = getFiles(Regex("NR.*"))
+        val pattern: Regex = if(base == Configuration.DATA_BASE_FOLDER_NR) Regex("NR.*")
+        else Regex("ZR.*")
+        val files = getFiles(pattern)
 
         val tasks =  files?.fold(mutableListOf<Task>()) { acc, file ->
             val parsed = parseTasks(file)
@@ -34,15 +36,17 @@ class InputReader(private val base: String) {
     }
 
     fun prepareSolutions(): List<Reference> {
-        val files = getFiles(Regex("NK.*"))
+        val pattern: Regex = if(base == Configuration.DATA_BASE_FOLDER_NR) Regex("NK.*")
+        else Regex("ZK.*")
+        val files = getFiles(pattern)
 
-        val tasks = files?.fold(mutableListOf<Reference>()) { acc, file ->
+        val references = files?.fold(mutableListOf<Reference>()) { acc, file ->
             val parsed = getSolution(file)
             acc.add(Reference(file, parsed.first, parsed.second))
             acc
         }
 
-        return tasks?.sorted() ?: emptyList()
+        return references?.sorted() ?: emptyList()
     }
 
     private fun getSolution(file: File): Pair<List<KnapsackReference>, Int> {
@@ -55,7 +59,7 @@ class InputReader(private val base: String) {
             val bestPrice = data[2].toInt()
             solutions.add(KnapsackReference(id, bestPrice))
         }
-        return Pair(solutions, nItems)
+        return Pair(solutions.distinctBy { it.id }, nItems)
     }
 
     private fun getFiles(pattern: Regex): Array<File>? {
