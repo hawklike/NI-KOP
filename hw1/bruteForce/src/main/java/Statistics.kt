@@ -4,11 +4,14 @@ import java.io.File
 class Statistics(dataBase: String) {
 
     private var outputBase: String = when(dataBase) {
-        Configuration.DATA_BASE_FOLDER_NR -> {
-            "${Configuration.OUTPUT_BASE_FILE}/NR"
+        Configuration.DATA_BASE_FOLDER_NK -> {
+            "${Configuration.OUTPUT_BASE_FILE}/NK"
         }
-        Configuration.DATA_BASE_FOLDER_ZR -> {
-            "${Configuration.OUTPUT_BASE_FILE}/ZR"
+        Configuration.DATA_BASE_FOLDER_ZKC -> {
+            "${Configuration.OUTPUT_BASE_FILE}/ZKC"
+        }
+        Configuration.DATA_BASE_FOLDER_ZKW -> {
+            "${Configuration.OUTPUT_BASE_FILE}/ZKW"
         }
         else -> {
             Configuration.OUTPUT_BASE_FILE
@@ -32,6 +35,8 @@ class Statistics(dataBase: String) {
             total iterations: ${task.iterations}
             avg iterations: ${task.avgIterations}
             max iterations: ${task.maxIterations}
+            avg delta: ${task.avgDelta * 100} %
+            max delta: ${task.maxDelta * 100} %
         """.trimIndent()
 
         OutputWriter(outputBase, filename).appendToEnd(output + "\n")
@@ -58,7 +63,9 @@ data class TaskStats(
         val avgIterations: ULong,
         val maxIterations: ULong,
         val method: KnapsackProblem.Method,
-        val time: Double
+        val time: Double,
+        val avgDelta: Double,
+        val maxDelta: Double
 )
 
 @ExperimentalUnsignedTypes

@@ -9,9 +9,9 @@ private val Boolean.toInt: Int
 @ExperimentalUnsignedTypes
 class Validator {
     fun validate(base: String, method: KnapsackProblem.Method, input: String? = null, output: String? = null) {
-        val inputReaderNR = InputReader(base)
-        val tasks = inputReaderNR.initKnapsackProblems(input)
-        val solutions = inputReaderNR.prepareSolutions(output)
+        val inputReader = InputReader(base)
+        val tasks = inputReader.initKnapsackProblems(input)
+        val solutions = inputReader.prepareSolutions(output)
 
         val stats = Statistics(base)
 
@@ -21,6 +21,8 @@ class Validator {
             var iterations: ULong = 0u
             var maxIterations: ULong = 0u
 
+            val epsilons = MutableList(task.instances.size) { 0.0 }
+
             println("------------TASK ${task.file.name} -----------------")
 
             val timer = StopwatchCPU(StopwatchCPU.IN_SECONDS)
@@ -29,10 +31,12 @@ class Validator {
                 val result = problem.compute(method)
                 iterations += result.iterations
                 maxIterations = max(maxIterations, result.iterations)
-                val minPrice = problem.minPrice
                 val referencedPrice = solutions[i].solutions[j].bestPrice
-                print("${j+1}:\t res: ${(result.solution as Boolean).toInt} ref: $referencedPrice ")
-                if(referencedPrice >= minPrice == result.solution) println("OK") else println("FAIL")
+                val computedPrice = result.solution as Int
+                val epsilon = if(referencedPrice == 0) 0.0 else 1 - (computedPrice / referencedPrice.toDouble())
+                epsilons[j] = epsilon
+                print("${j+1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon ")
+                if(referencedPrice == result.solution) println("OK") else println("FAIL")
             }
 
             val time = timer.elapsedTime()
@@ -44,7 +48,9 @@ class Validator {
                     iterations / task.instances.size.toUInt(),
                     maxIterations,
                     method,
-                    time
+                    time,
+                    epsilons.average(),
+                    epsilons.max() ?: 0.0
             ))
             println("time: $time")
         }
@@ -65,10 +71,9 @@ class Validator {
                 val timer = StopwatchCPU(StopwatchCPU.IN_MICROSECONDS)
                 val result = problem.compute(method)
                 val time = timer.elapsedTime()
-                val minPrice = problem.minPrice
                 val referencedPrice = solutions[i].solutions[j].bestPrice
-                print("${j+1}:\t res: ${(result.solution as Boolean).toInt} ref: $referencedPrice time: $time mcs iterations: ${result.iterations} ")
-                if(referencedPrice >= minPrice == result.solution) println("OK") else println("FAIL")
+                print("${j+1}:\t res: ${(result.solution as Int)} ref: $referencedPrice time: $time mcs iterations: ${result.iterations} ")
+                if(referencedPrice == result.solution) println("OK") else println("FAIL")
                 stats.printToFile(Histogram(method, task.file.name, result.iterations, time))
             }
         }
@@ -78,16 +83,6 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
    with(Validator()) {
-//       var i = 0
-//       repeat(1000) {
-//           i += it
-//       }
-//       repeat(500) {
-//           createHistogram(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.BRANCH_AND_BOUND, "NR32_inst.dat", "NK32_sol.dat")
-//       }
-       createHistogram(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.BRANCH_AND_BOUND, "NR25_inst.dat", "NK25_sol.dat")
-       createHistogram(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.SMART_BRUTEFORCE, "NR25_inst.dat", "NK25_sol.dat")
-       createHistogram(Configuration.DATA_BASE_FOLDER_ZR, KnapsackProblem.Method.BRANCH_AND_BOUND, "ZR25_inst.dat", "ZK25_sol.dat")
-       createHistogram(Configuration.DATA_BASE_FOLDER_ZR, KnapsackProblem.Method.SMART_BRUTEFORCE, "ZR25_inst.dat", "ZK25_sol.dat")
+       validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.BRUTEFORCE)
    }
 }

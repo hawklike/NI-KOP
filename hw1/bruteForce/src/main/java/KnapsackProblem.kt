@@ -4,7 +4,6 @@ import kotlin.math.max
 data class KnapsackProblem(
         val id: Int,
         val maxWeight: Int,
-        val minPrice: Int,
         var items: List<Item>
 ) {
     private var iterations: ULong = 0U
@@ -14,16 +13,16 @@ data class KnapsackProblem(
         return when(method) {
             Method.BRUTEFORCE -> {
                 val price = bruteForceSolver(0, 0, items.size - 1)
-                KnapsackSolution(price >= minPrice, iterations)
+                KnapsackSolution(price, iterations)
             }
             Method.SMART_BRUTEFORCE -> {
                 val price = smartBruteForceSolver(0, 0, items.size - 1)
-                KnapsackSolution(price >= minPrice, iterations)
+                KnapsackSolution(price, iterations)
             }
             Method.BRANCH_AND_BOUND -> {
                 items = items.filter { it.weight <= maxWeight }
                 val price = branchAndBoundSolver(0, 0, items.size - 1)
-                KnapsackSolution(price >= minPrice, iterations)
+                KnapsackSolution(price, iterations)
             }
         }
     }
@@ -45,7 +44,7 @@ data class KnapsackProblem(
     private fun smartBruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
         iterations++
 
-        if(actualPrice >= minPrice) solutionFound = true
+//        if(actualPrice >= minPrice) solutionFound = true
         if(solutionFound) return actualPrice
 
         if(n == -1) {
@@ -64,7 +63,7 @@ data class KnapsackProblem(
     private fun branchAndBoundSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
         iterations++
 
-        if(actualPrice >= minPrice) solutionFound = true
+//        if(actualPrice >= minPrice) solutionFound = true
         if(solutionFound) return actualPrice
 
         //all items are tried
@@ -84,7 +83,8 @@ data class KnapsackProblem(
     }
 
     private fun bound(actualPrice: Int, n: Int): Boolean {
-        return (actualPrice + items.take(n).sumBy { it.price }) < minPrice
+        return true
+//        return (actualPrice + items.take(n).sumBy { it.price }) < minPrice
     }
 
     enum class Method {

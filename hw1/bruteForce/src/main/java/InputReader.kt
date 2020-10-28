@@ -1,4 +1,5 @@
 import java.io.File
+import java.lang.IllegalArgumentException
 
 @ExperimentalUnsignedTypes
 class InputReader(private val base: String) {
@@ -9,8 +10,13 @@ class InputReader(private val base: String) {
     }
 
     private fun pInitKnapsackProblems(): List<Task> {
-        val pattern: Regex = if(base == Configuration.DATA_BASE_FOLDER_NR) Regex("NR.*")
-        else Regex("ZR.*")
+        val pattern = when(base) {
+            Configuration.DATA_BASE_FOLDER_NK -> Regex("NK\\d{1,2}_inst.dat")
+            Configuration.DATA_BASE_FOLDER_ZKC -> Regex("ZKC\\d{1,2}_inst.dat")
+            Configuration.DATA_BASE_FOLDER_ZKW -> Regex("ZKW\\d{1,2}_inst.dat")
+            else -> throw IllegalArgumentException("base of this name doesn't exist")
+        }
+
         val files = getFiles(pattern)
 
         val tasks =  files?.fold(mutableListOf<Task>()) { acc, file ->
@@ -39,12 +45,11 @@ class InputReader(private val base: String) {
             val id = kotlin.math.abs(data[0].toInt())
             nItems = data[1].toInt()
             val maxWeight = data[2].toInt()
-            val minPrice = data[3].toInt()
             val items = mutableListOf<Item>()
-            for(i in 4 until data.size step 2) {
+            for(i in 3 until data.size step 2) {
                 items.add(Item(data[i].toInt(), data[i+1].toInt()))
             }
-            problems.add(KnapsackProblem(id, maxWeight, minPrice, items))
+            problems.add(KnapsackProblem(id, maxWeight, items))
         }
         return Pair(problems, nItems)
     }
@@ -55,8 +60,12 @@ class InputReader(private val base: String) {
     }
 
     private fun pPrepareSolutions(): List<Reference> {
-        val pattern: Regex = if(base == Configuration.DATA_BASE_FOLDER_NR) Regex("NK.*")
-        else Regex("ZK.*")
+        val pattern = when(base) {
+            Configuration.DATA_BASE_FOLDER_NK -> Regex("NK\\d{1,2}_sol.dat")
+            Configuration.DATA_BASE_FOLDER_ZKC -> Regex("ZKC\\d{1,2}_sol.dat")
+            Configuration.DATA_BASE_FOLDER_ZKW -> Regex("ZKW\\d{1,2}_sol.dat")
+            else -> throw IllegalArgumentException("base of this name doesn't exist")
+        }
         val files = getFiles(pattern)
 
         val references = files?.fold(mutableListOf<Reference>()) { acc, file ->
