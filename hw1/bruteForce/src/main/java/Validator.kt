@@ -78,6 +78,16 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
    with(Validator()) {
-       validate(Configuration.DATA_BASE_FOLDER_ZR, KnapsackProblem.Method.SMART_BRUTEFORCE)
+//       var i = 0
+//       repeat(1000) {
+//           i += it
+//       }
+//       repeat(500) {
+//           createHistogram(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.BRANCH_AND_BOUND, "NR32_inst.dat", "NK32_sol.dat")
+//       }
+       createHistogram(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.BRANCH_AND_BOUND, "NR25_inst.dat", "NK25_sol.dat")
+       createHistogram(Configuration.DATA_BASE_FOLDER_NR, KnapsackProblem.Method.SMART_BRUTEFORCE, "NR25_inst.dat", "NK25_sol.dat")
+       createHistogram(Configuration.DATA_BASE_FOLDER_ZR, KnapsackProblem.Method.BRANCH_AND_BOUND, "ZR25_inst.dat", "ZK25_sol.dat")
+       createHistogram(Configuration.DATA_BASE_FOLDER_ZR, KnapsackProblem.Method.SMART_BRUTEFORCE, "ZR25_inst.dat", "ZK25_sol.dat")
    }
 }

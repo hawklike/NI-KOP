@@ -44,8 +44,8 @@ class Statistics(dataBase: String) {
                 KnapsackProblem.Method.SMART_BRUTEFORCE -> Configuration.OUTPUT_FILENAME_SMART_BRUTEFORCE
                 KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
             }) {
-        OutputWriter(outputBase, "histogram_${histogram.taskName}_${filename}_iterations").appendToEnd(histogram.iterations.toString())
-        OutputWriter(outputBase, "histogram_${histogram.taskName}_${filename}_time").appendToEnd(histogram.time.toString())
+        OutputWriter(outputBase, "histogram_${histogram.taskName}_${filename}_iterations_new").appendToEnd(histogram.iterations.toString())
+        OutputWriter(outputBase, "histogram_${histogram.taskName}_${filename}_time_new").appendToEnd(histogram.time.toString())
     }
 }
 

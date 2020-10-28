@@ -11,7 +11,8 @@ class StopwatchCPU(private val units: Double) {
 
     companion object Units {
         const val IN_SECONDS = 1000000000.0
-        const val IN_MICROSECONDS = 1000000.0
+        const val IN_MILLISECONDS = 1000000.0
+        const val IN_MICROSECONDS = 1000.0
 
     }
 

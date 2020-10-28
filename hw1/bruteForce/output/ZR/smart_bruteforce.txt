@@ -1,64 +1,63 @@
-//////// TASK: ZR4_inst.dat ////////
+//////// TASK: ZR4_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 4
-time: 0.024629009 s
+time: 0,024629009 s
 total iterations: 8544
 avg iterations: 17
 max iterations: 27
 
-//////// TASK: ZR10_inst.dat ////////
+//////// TASK: ZR10_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 10
-time: 0.013593663 s
+time: 0,013593663 s
 total iterations: 435407
 avg iterations: 870
 max iterations: 1792
 
-//////// TASK: ZR15_inst.dat ////////
+//////// TASK: ZR15_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 15
-time: 0.10018563 s
+time: 0,10018563 s
 total iterations: 14023016
 avg iterations: 28046
 max iterations: 59127
 
-//////// TASK: ZR20_inst.dat ////////
+//////// TASK: ZR20_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 20
-time: 3.005202714 s
+time: 3,005202714 s
 total iterations: 456465195
 avg iterations: 912930
 max iterations: 1934768
 
-//////// TASK: ZR22_inst.dat ////////
+//////// TASK: ZR22_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 22
-time: 9.455924711 s
+time: 9,455924711 s
 total iterations: 1826549837
 avg iterations: 3653099
 max iterations: 7789566
 
-//////// TASK: ZR25_inst.dat ////////
+//////// TASK: ZR25_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 25
-time: 63.982570471 s
+time: 63,982570471 s
 total iterations: 14783822058
 avg iterations: 29567644
 max iterations: 63230297
 
-//////// TASK: ZR27_inst.dat ////////
+//////// TASK: ZR27_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 27
-time: 247.957123314 s
+time: 247,957123314 s
 total iterations: 59269142010
 avg iterations: 118538284
 max iterations: 254052256
 
-//////// TASK: ZR30_inst.dat ////////
+//////// TASK: ZR30_inst,dat ////////
 method: SMART_BRUTEFORCE
 n: 30
-time: 2359.48279629 s
+time: 2359,48279629 s
 total iterations: 477214233688
 avg iterations: 954428467
 max iterations: 2048297917
-
