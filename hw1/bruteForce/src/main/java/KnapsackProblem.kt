@@ -7,24 +7,26 @@ data class KnapsackProblem(
         var items: List<Item>
 ) {
     private var iterations: ULong = 0U
-    private var solutionFound = false
 
     fun compute(method: Method): KnapsackSolution<*> {
-        return when(method) {
+        val price: Int
+        when(method) {
             Method.BRUTEFORCE -> {
-                val price = bruteForceSolver(0, 0, items.size - 1)
-                KnapsackSolution(price, iterations)
+                price = bruteForceSolver(0, 0, items.size - 1)
             }
             Method.SMART_BRUTEFORCE -> {
-                val price = smartBruteForceSolver(0, 0, items.size - 1)
-                KnapsackSolution(price, iterations)
+                price = smartBruteForceSolver(0, 0, items.size - 1)
             }
             Method.BRANCH_AND_BOUND -> {
                 items = items.filter { it.weight <= maxWeight }
-                val price = branchAndBoundSolver(0, 0, items.size - 1)
-                KnapsackSolution(price, iterations)
+                price = branchAndBoundSolver(0, 0, items.size - 1)
+            }
+            Method.GREEDY -> {
+                items = items.sortedByDescending { it.price / it.weight.toDouble() }
+                price = greedy()
             }
         }
+        return KnapsackSolution(price, iterations)
     }
 
     private fun bruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
@@ -84,10 +86,20 @@ data class KnapsackProblem(
         return (actualPrice + items.take(n).sumBy { it.price }) <= branchAndBoundMaximum
     }
 
+    private fun greedy(): Int {
+        var weight = 0
+        return items.fold(0) { price, item ->
+            if(weight + item.weight <= maxWeight) {
+                weight += item.weight
+                iterations++
+                item.price
+            } else price
+        }
+    }
+
     enum class Method {
         BRUTEFORCE,
-        SMART_BRUTEFORCE,
-        BRANCH_AND_BOUND
+        SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY
     }
 }
 

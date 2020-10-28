@@ -20,12 +20,7 @@ class Statistics(dataBase: String) {
 
     @Suppress("ConstantConditionIf")
     fun printToFile(
-            task: TaskStats,
-            filename: String = when(task.method) {
-                KnapsackProblem.Method.BRUTEFORCE -> Configuration.OUTPUT_FILENAME_BRUTEFORCE
-                KnapsackProblem.Method.SMART_BRUTEFORCE -> Configuration.OUTPUT_FILENAME_SMART_BRUTEFORCE
-                KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
-            }
+            task: TaskStats, filename: String = getFilename(task.method)
     ) {
         val output = """
             //////// TASK: ${task.task.name} ////////
@@ -43,15 +38,18 @@ class Statistics(dataBase: String) {
     }
 
     fun printToFile(
-            histogram: Histogram,
-            filename: String = when(histogram.method) {
-                KnapsackProblem.Method.BRUTEFORCE -> Configuration.OUTPUT_FILENAME_BRUTEFORCE
-                KnapsackProblem.Method.SMART_BRUTEFORCE -> Configuration.OUTPUT_FILENAME_SMART_BRUTEFORCE
-                KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
-            }) {
+            histogram: Histogram, filename: String = getFilename(histogram.method)) {
         OutputWriter(outputBase, "histogram_${histogram.taskName}_${filename}_iterations_new").appendToEnd(histogram.iterations.toString())
         OutputWriter(outputBase, "histogram_${histogram.taskName}_${filename}_time_new").appendToEnd(histogram.time.toString())
     }
+
+    private fun getFilename(method: KnapsackProblem.Method): String = when(method) {
+        KnapsackProblem.Method.BRUTEFORCE -> Configuration.OUTPUT_FILENAME_BRUTEFORCE
+        KnapsackProblem.Method.SMART_BRUTEFORCE -> Configuration.OUTPUT_FILENAME_SMART_BRUTEFORCE
+        KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
+        KnapsackProblem.Method.GREEDY -> Configuration.OUTPUT_FILENAME_GREEDY_HEURISTIC
+    }
+
 }
 
 
