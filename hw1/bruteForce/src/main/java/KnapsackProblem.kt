@@ -44,9 +44,6 @@ data class KnapsackProblem(
     private fun smartBruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
         iterations++
 
-//        if(actualPrice >= minPrice) solutionFound = true
-        if(solutionFound) return actualPrice
-
         if(n == -1) {
             return if(actualWeight <= maxWeight) actualPrice
             else 0
@@ -60,11 +57,12 @@ data class KnapsackProblem(
         )
     }
 
+    private var branchAndBoundMaximum = 0
+
     private fun branchAndBoundSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
         iterations++
 
-//        if(actualPrice >= minPrice) solutionFound = true
-        if(solutionFound) return actualPrice
+        branchAndBoundMaximum = max(branchAndBoundMaximum, actualPrice)
 
         //all items are tried
         if(n == -1) return actualPrice
@@ -83,8 +81,7 @@ data class KnapsackProblem(
     }
 
     private fun bound(actualPrice: Int, n: Int): Boolean {
-        return true
-//        return (actualPrice + items.take(n).sumBy { it.price }) < minPrice
+        return (actualPrice + items.take(n).sumBy { it.price }) <= branchAndBoundMaximum
     }
 
     enum class Method {
