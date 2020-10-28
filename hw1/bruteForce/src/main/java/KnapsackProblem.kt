@@ -25,9 +25,14 @@ data class KnapsackProblem(
                 items = items.sortedByDescending { it.price / it.weight.toDouble() }
                 price = greedy()
             }
+            Method.REDUX -> {
+                items = items.sortedByDescending { it.price / it.weight.toDouble() }
+                price = redux(greedy())
+            }
         }
         return KnapsackSolution(price, iterations)
     }
+
 
     private fun bruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
         iterations++
@@ -97,9 +102,16 @@ data class KnapsackProblem(
         }
     }
 
+    private fun redux(greedy: Int): Int {
+        return try {
+            max(items.sortedByDescending { it.price }.first { it.weight <= maxWeight }.price, greedy)
+        } catch(ex: NoSuchElementException) {
+            greedy
+        }
+    }
+
     enum class Method {
-        BRUTEFORCE,
-        SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY
+        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX
     }
 }
 

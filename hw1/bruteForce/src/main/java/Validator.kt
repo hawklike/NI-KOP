@@ -83,6 +83,6 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
    with(Validator()) {
-       validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.GREEDY)
+       validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.REDUX)
    }
 }

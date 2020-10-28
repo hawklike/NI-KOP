@@ -48,6 +48,7 @@ class Statistics(dataBase: String) {
         KnapsackProblem.Method.SMART_BRUTEFORCE -> Configuration.OUTPUT_FILENAME_SMART_BRUTEFORCE
         KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
         KnapsackProblem.Method.GREEDY -> Configuration.OUTPUT_FILENAME_GREEDY_HEURISTIC
+        KnapsackProblem.Method.REDUX -> Configuration.OUTPUT_FILENAME_REDUX_HEURISTIC
     }
 
 }
