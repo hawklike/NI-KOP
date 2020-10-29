@@ -1,1 +1,1 @@
-data class Item(val weight: Int, val price: Int)
+data class Item(val weight: Int, var price: Int)

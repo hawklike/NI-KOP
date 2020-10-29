@@ -1,5 +1,6 @@
 @ExperimentalUnsignedTypes
 object Configuration {
+    const val FPTAS_EPSILON = 0.75
     const val OUTPUT_FILENAME_BRUTEFORCE = "bruteforce.txt"
     const val OUTPUT_FILENAME_SMART_BRUTEFORCE = "smart_bruteforce.txt"
     const val OUTPUT_FILENAME_BRANCH_AND_BOUND = "branch_and_bound.txt"

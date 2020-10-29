@@ -1,4 +1,5 @@
 import java.lang.Integer.min
+import kotlin.math.floor
 import kotlin.math.max
 
 @ExperimentalUnsignedTypes
@@ -16,7 +17,7 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
                 price = smartBruteForceSolver(0, 0, items.size - 1)
             }
             Method.BRANCH_AND_BOUND -> {
-                items = items.filter { it.weight <= maxWeight }
+                filterHeavyItems()
                 price = branchAndBoundSolver(0, 0, items.size - 1)
             }
             Method.GREEDY -> {
@@ -28,7 +29,11 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
                 price = redux(greedy())
             }
             Method.DYNAMIC_PROGRAMMING -> {
+                filterHeavyItems()
                 price = dynamicProgramming()
+            }
+            Method.FTPAS -> {
+                price = fptas()
             }
         }
         return KnapsackSolution(price, iterations)
@@ -43,7 +48,9 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
             else 0
         }
 
-        return max(bruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1), bruteForceSolver(actualWeight, actualPrice, n - 1))
+        return max(bruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
+                   bruteForceSolver(actualWeight, actualPrice, n - 1)
+        )
     }
 
     private fun smartBruteForceSolver(actualWeight: Int, actualPrice: Int, n: Int): Int {
@@ -56,7 +63,9 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
 
         if(actualWeight + items[n].weight > maxWeight) return smartBruteForceSolver(actualWeight, actualPrice, n - 1)
 
-        return max(smartBruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1), smartBruteForceSolver(actualWeight, actualPrice, n - 1))
+        return max(smartBruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
+                   smartBruteForceSolver(actualWeight, actualPrice, n - 1)
+        )
     }
 
     private var branchAndBoundMaximum = 0
@@ -76,7 +85,9 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
         if(actualWeight + items[n].weight > maxWeight) return branchAndBoundSolver(actualWeight, actualPrice, n - 1)
 
         //try it with and without current item
-        return max(branchAndBoundSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1), branchAndBoundSolver(actualWeight, actualPrice, n - 1))
+        return max(branchAndBoundSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
+                   branchAndBoundSolver(actualWeight, actualPrice, n - 1)
+        )
     }
 
     private fun bound(actualPrice: Int, n: Int): Boolean {
@@ -89,7 +100,7 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
             if(weight + item.weight <= maxWeight) {
                 weight += item.weight
                 iterations++
-                item.price
+                price + item.price
             } else price
         }
     }
@@ -143,8 +154,23 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
         return 0
     }
 
+    private fun fptas(): Int {
+        filterHeavyItems()
+        if(items.isEmpty()) return 0
+        val maxPrice = items.maxBy { it.price }!!.price
+        val k = (Configuration.FPTAS_EPSILON * maxPrice) / items.size
+        items.forEach {
+            it.price = floor(it.price / k).toInt()
+        }
+        return (k * dynamicProgramming()).toInt()
+    }
+
+    private fun filterHeavyItems() {
+        items = items.filter { it.weight <= maxWeight }
+    }
+
     enum class Method {
-        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX, DYNAMIC_PROGRAMMING
+        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX, DYNAMIC_PROGRAMMING, FTPAS
     }
 }
 

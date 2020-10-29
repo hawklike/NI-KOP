@@ -30,8 +30,8 @@ class Statistics(dataBase: String) {
             total iterations: ${task.iterations}
             avg iterations: ${task.avgIterations}
             max iterations: ${task.maxIterations}
-            avg delta: ${task.avgDelta * 100} %
-            max delta: ${task.maxDelta * 100} %
+            avg delta: ${task.avgDelta}
+            max delta: ${task.maxDelta}
         """.trimIndent()
 
         OutputWriter(outputBase, filename).appendToEnd(output + "\n")
@@ -50,6 +50,7 @@ class Statistics(dataBase: String) {
         KnapsackProblem.Method.GREEDY -> Configuration.OUTPUT_FILENAME_GREEDY_HEURISTIC
         KnapsackProblem.Method.REDUX -> Configuration.OUTPUT_FILENAME_REDUX_HEURISTIC
         KnapsackProblem.Method.DYNAMIC_PROGRAMMING -> Configuration.OUTPUT_FILENAME_DYNAMIC_PROGRAMMING
+        KnapsackProblem.Method.FTPAS -> Configuration.OUTPUT_FILENAME_FTPAS
     }
 
 }

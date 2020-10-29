@@ -81,6 +81,6 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
     with(Validator()) {
-        validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.DYNAMIC_PROGRAMMING)
+        validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.REDUX)
     }
 }
