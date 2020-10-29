@@ -1,3 +1,4 @@
+import kotlin.math.abs
 import kotlin.math.max
 
 private val Boolean.toInt: Int
@@ -33,7 +34,7 @@ class Validator {
                 maxIterations = max(maxIterations, result.iterations)
                 val referencedPrice = solutions[i].solutions[j].bestPrice
                 val computedPrice = result.solution as Int
-                val epsilon = if(referencedPrice == 0) 0.0 else 1 - (computedPrice / referencedPrice.toDouble())
+                val epsilon = calculateEpsilon(referencedPrice, computedPrice)
                 epsilons[j] = epsilon
                 print("${j+1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon ")
                 if(referencedPrice == result.solution) println("OK") else println("FAIL")
@@ -41,17 +42,7 @@ class Validator {
 
             val time = timer.elapsedTime()
 
-            stats.printToFile(TaskStats(
-                    task.file,
-                    task.nItems,
-                    iterations,
-                    iterations / task.instances.size.toUInt(),
-                    maxIterations,
-                    method,
-                    time,
-                    epsilons.average(),
-                    epsilons.max() ?: 0.0
-            ))
+            stats.printToFile(TaskStats(task.file, task.nItems, iterations, iterations / task.instances.size.toUInt(), maxIterations, method, time, epsilons.average(), epsilons.max() ?: 0.0))
             println("time: $time")
         }
     }
@@ -78,11 +69,18 @@ class Validator {
             }
         }
     }
+
+    private fun calculateEpsilon(reference: Int, computed: Int): Double {
+        return (abs(reference - computed) / max(reference, computed).toDouble()).let {
+            if(it.isNaN()) 0.0
+            else it
+        }
+    }
 }
 
 @ExperimentalUnsignedTypes
 fun main() {
-   with(Validator()) {
-       validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.REDUX)
-   }
+    with(Validator()) {
+        validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.DYNAMIC_PROGRAMMING)
+    }
 }

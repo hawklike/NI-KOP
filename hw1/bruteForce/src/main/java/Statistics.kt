@@ -49,6 +49,7 @@ class Statistics(dataBase: String) {
         KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
         KnapsackProblem.Method.GREEDY -> Configuration.OUTPUT_FILENAME_GREEDY_HEURISTIC
         KnapsackProblem.Method.REDUX -> Configuration.OUTPUT_FILENAME_REDUX_HEURISTIC
+        KnapsackProblem.Method.DYNAMIC_PROGRAMMING -> Configuration.OUTPUT_FILENAME_DYNAMIC_PROGRAMMING
     }
 
 }
