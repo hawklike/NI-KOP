@@ -28,9 +28,13 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
                 items = items.sortedByDescending { it.price / it.weight.toDouble() }
                 price = redux(greedy())
             }
-            Method.DYNAMIC_PROGRAMMING -> {
+            Method.DYNAMIC_PROGRAMMING_BY_PRICE -> {
                 filterHeavyItems()
-                price = dynamicProgramming()
+                price = dynamicProgrammingByPrice()
+            }
+            Method.DYNAMIC_PROGRAMMING_BY_WEIGHT -> {
+                filterHeavyItems()
+                price = dynamicProgrammingByWeight()
             }
             Method.FTPAS -> {
                 price = fptas()
@@ -113,7 +117,7 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
         }
     }
 
-    private fun dynamicProgramming(): Int {
+    private fun dynamicProgrammingByPrice(): Int {
         val totalPrice = items.sumBy { it.price }
         val rows = totalPrice + 1
         val columns = items.size + 1
@@ -154,6 +158,30 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
         return 0
     }
 
+    private fun dynamicProgrammingByWeight(): Int {
+        val rows = items.size + 1
+        val columns = maxWeight + 1
+
+        val prices = Array(rows) { IntArray(columns) }
+
+        for(i in 1 until rows) {
+            for(c in 1 until columns) {
+                val maxPriceWithoutCurr = prices[i - 1][c]
+                var maxPriceWithCurr = 0
+
+                val weightCurr = items[i - 1].weight
+                if(c >= weightCurr) {
+                    maxPriceWithCurr = items[i - 1].price
+                    maxPriceWithCurr += prices[i - 1][c - weightCurr]
+                }
+
+                prices[i][c] = max(maxPriceWithCurr, maxPriceWithoutCurr)
+            }
+        }
+
+        return prices[rows - 1][columns - 1]
+    }
+
     private fun fptas(): Int {
         filterHeavyItems()
         if(items.isEmpty()) return 0
@@ -162,7 +190,7 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
         items.forEach {
             it.price = floor(it.price / k).toInt()
         }
-        return (k * dynamicProgramming()).toInt()
+        return (k * dynamicProgrammingByPrice()).toInt()
     }
 
     private fun filterHeavyItems() {
@@ -170,7 +198,7 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
     }
 
     enum class Method {
-        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX, DYNAMIC_PROGRAMMING, FTPAS
+        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX, DYNAMIC_PROGRAMMING_BY_PRICE, DYNAMIC_PROGRAMMING_BY_WEIGHT, FTPAS
     }
 }
 

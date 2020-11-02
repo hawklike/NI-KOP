@@ -19,22 +19,40 @@ class Statistics(dataBase: String) {
     }
 
     @Suppress("ConstantConditionIf")
-    fun printToFile(
-            task: TaskStats, filename: String = getFilename(task.method)
+    fun printToFile(task: TaskStats, stats: Stats, filename: String = getFilename(task.method), verbose: Boolean = false
     ) {
-        val output = """
+        var completeName = filename
+        val output = if(verbose) {
+            """
             //////// TASK: ${task.task.name} ////////
             method: ${task.method}
             n: ${task.nInstances}
-            time: ${task.time} s
+            instance time: ${task.time / task.nInstances.toDouble()} ms
             total iterations: ${task.iterations}
             avg iterations: ${task.avgIterations}
             max iterations: ${task.maxIterations}
             avg delta: ${task.avgDelta}
             max delta: ${task.maxDelta}
         """.trimIndent()
+        } else {
+            when(stats) {
+                Stats.TIME -> {
+                    completeName += "_time"
+                    (task.time / task.nInstances.toDouble()).toString().replace(".", ",")
+                }
+                Stats.MAX_DELTA -> {
+                    completeName += "_max_delta"
+                    task.maxDelta.toString().replace(".", ",")
+                }
+                else -> {
+                    completeName += "_avg_delta"
+                    task.avgDelta.toString().replace(".", ",")
+                }
+            }
+        }
 
-        OutputWriter(outputBase, filename).appendToEnd(output + "\n")
+
+        OutputWriter(outputBase, completeName).appendToEnd(if(verbose) output + "\n" else output)
     }
 
     fun printToFile(
@@ -49,8 +67,13 @@ class Statistics(dataBase: String) {
         KnapsackProblem.Method.BRANCH_AND_BOUND -> Configuration.OUTPUT_FILENAME_BRANCH_AND_BOUND
         KnapsackProblem.Method.GREEDY -> Configuration.OUTPUT_FILENAME_GREEDY_HEURISTIC
         KnapsackProblem.Method.REDUX -> Configuration.OUTPUT_FILENAME_REDUX_HEURISTIC
-        KnapsackProblem.Method.DYNAMIC_PROGRAMMING -> Configuration.OUTPUT_FILENAME_DYNAMIC_PROGRAMMING
+        KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_PRICE -> Configuration.OUTPUT_FILENAME_DYNAMIC_PROGRAMMING
         KnapsackProblem.Method.FTPAS -> Configuration.OUTPUT_FILENAME_FTPAS
+        KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_WEIGHT -> Configuration.OUTPUT_FILENAME_DYNAMIC_PROGRAMMING_BY_WEIGHT
+    }
+
+    enum class Stats {
+        TIME, AVG_DELTA, MAX_DELTA
     }
 
 }
