@@ -1,5 +1,4 @@
 import java.io.File
-import java.lang.IllegalArgumentException
 
 @ExperimentalUnsignedTypes
 class InputReader(private val base: String) {
@@ -10,14 +9,14 @@ class InputReader(private val base: String) {
     }
 
     private fun pInitKnapsackProblems(): List<Task> {
-        val pattern = when(base) {
-            Configuration.DATA_BASE_FOLDER_NK -> Regex("NK\\d{1,2}_inst.dat")
-            Configuration.DATA_BASE_FOLDER_ZKC -> Regex("ZKC\\d{1,2}_inst.dat")
-            Configuration.DATA_BASE_FOLDER_ZKW -> Regex("ZKW\\d{1,2}_inst.dat")
-            else -> throw IllegalArgumentException("base of this name doesn't exist")
-        }
+        //        val pattern = when(base) {
+        //            Configuration.DATA_BASE_FOLDER_NK -> Regex("NK\\d{1,2}_inst.dat")
+        //            Configuration.DATA_BASE_FOLDER_ZKC -> Regex(".*")
+        //            Configuration.DATA_BASE_FOLDER_ZKW -> Regex("ZKW\\d{1,2}_inst.dat")
+        //            else -> throw IllegalArgumentException("base of this name doesn't exist")
+        //        }
 
-        val files = getFiles(pattern)
+        val files = getFiles(Regex(".*"))?.sortedBy { it.name.toDouble() }
 
         val tasks =  files?.fold(mutableListOf<Task>()) { acc, file ->
             val parsed = parseTasks(file)
@@ -25,7 +24,7 @@ class InputReader(private val base: String) {
             acc
         }
 
-        return tasks?.sorted() ?: emptyList()
+        return tasks ?: emptyList()
     }
 
     private fun pInitKnapsackProblems(filename: String): List<Task> {

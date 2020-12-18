@@ -9,11 +9,11 @@ class Validator {
     fun validate(base: String, method: KnapsackProblem.Method, input: String? = null, output: String? = null) {
         val inputReader = InputReader(base)
         val tasks = inputReader.initKnapsackProblems(input)
-        val solutions = inputReader.prepareSolutions(output)
+        //        val solutions = inputReader.prepareSolutions(output)
 
         val stats = Statistics(base)
 
-        if(tasks.size != solutions.size) throw RuntimeException("tasks and solutions are not equal")
+        //        if(tasks.size != solutions.size) throw RuntimeException("tasks and solutions are not equal")
 
         tasks.forEachIndexed { i, task ->
             var iterations: ULong = 0u
@@ -22,20 +22,26 @@ class Validator {
             val nInstances = task.instances.size
             val epsilons = MutableList(nInstances) { 0.0 }
 
+            val references = mutableListOf<Int>()
+
+            task.instances.forEach { problem ->
+                references.add(problem.compute(KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_WEIGHT).solution as Int)
+            }
+
             println("------------TASK ${task.file.name} -----------------")
 
-            val timer = StopwatchCPU(StopwatchCPU.IN_MILLISECONDS)
+            val timer = StopwatchCPU(StopwatchCPU.IN_MICROSECONDS)
 
             task.instances.forEachIndexed { j, problem ->
                 val result = problem.compute(method)
                 iterations += result.iterations
                 maxIterations = max(maxIterations, result.iterations)
-                val referencedPrice = solutions[i].solutions[j].bestPrice
+                val referencedPrice = references[j]
                 val computedPrice = result.solution as Int
                 val epsilon = calculateEpsilon(referencedPrice, computedPrice)
                 epsilons[j] = epsilon
-                print("${j + 1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon $method ")
-                if(referencedPrice == result.solution) println("OK") else println("FAIL")
+                //                print("${j + 1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon $method ")
+                //                if(referencedPrice == result.solution) println("OK") else println("FAIL")
             }
 
             val time = timer.elapsedTime()
@@ -43,10 +49,9 @@ class Validator {
                                       epsilons.average(), epsilons.max() ?: 0.0
             )
 
-
-            //            stats.printToFile(taskStats, Statistics.Stats.TIME)
-            //            stats.printToFile(taskStats, Statistics.Stats.AVG_DELTA)
-            //            stats.printToFile(taskStats, Statistics.Stats.MAX_DELTA)
+            stats.printToFile(taskStats, Statistics.Stats.TIME)
+            stats.printToFile(taskStats, Statistics.Stats.AVG_DELTA)
+            stats.printToFile(taskStats, Statistics.Stats.MAX_DELTA)
             println("time: $time")
         }
     }
@@ -123,17 +128,11 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
     with(Validator()) {
-        //        doFtpas("ftpas0_75", 0.75)
-        //        doFtpas("ftpas0_5", 0.5)
-        //        doFtpas("ftpas0_2", 0.2)
-        //        doFtpas("ftpas0_05", 0.05)
-        repeat(1) {
-            //            repeat(KnapsackProblem.Method.REDUX)
-            //            repeat(KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_PRICE)
-            //            repeat(KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_WEIGHT)
-            repeat(KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_WEIGHT)
-            //            repeat(KnapsackProblem.Method.SMART_BRUTEFORCE)
-            //            repeat(KnapsackProblem.Method.BRANCH_AND_BOUND)
-        }
+        Configuration.ACTUAL_PARAMETER = "k/heavy"
+        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}", KnapsackProblem.Method.GREEDY)
+        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_PRICE)
+        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.BRANCH_AND_BOUND)
+        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.GREEDY)
+        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.SMART_BRUTEFORCE)
     }
 }

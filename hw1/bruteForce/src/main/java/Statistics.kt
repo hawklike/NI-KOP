@@ -14,7 +14,7 @@ class Statistics(dataBase: String) {
             "${Configuration.OUTPUT_BASE_FILE}/ZKW"
         }
         else -> {
-            Configuration.OUTPUT_BASE_FILE
+            "${Configuration.OUTPUT_BASE_FILE}/${Configuration.ACTUAL_PARAMETER}"
         }
     }
 
@@ -27,7 +27,7 @@ class Statistics(dataBase: String) {
             //////// TASK: ${task.task.name} ////////
             method: ${task.method}
             n: ${task.nInstances}
-            instance time: ${task.time / task.nInstances.toDouble()} ms
+            instance time: ${task.time / task.nInstances.toDouble()} micro s
             total iterations: ${task.iterations}
             avg iterations: ${task.avgIterations}
             max iterations: ${task.maxIterations}

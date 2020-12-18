@@ -1,9 +1,13 @@
 import java.lang.Integer.min
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.math.exp
 import kotlin.math.floor
 import kotlin.math.max
+import kotlin.random.Random
 
 @ExperimentalUnsignedTypes
-data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item>
+data class KnapsackProblem(
+    val id: Int, val maxWeight: Int, var items: List<Item>
 ) {
     private var iterations: ULong = 0U
 
@@ -52,8 +56,8 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
             else 0
         }
 
-        return max(bruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
-                   bruteForceSolver(actualWeight, actualPrice, n - 1)
+        return max(
+            bruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1), bruteForceSolver(actualWeight, actualPrice, n - 1)
         )
     }
 
@@ -67,8 +71,9 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
 
         if(actualWeight + items[n].weight > maxWeight) return smartBruteForceSolver(actualWeight, actualPrice, n - 1)
 
-        return max(smartBruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
-                   smartBruteForceSolver(actualWeight, actualPrice, n - 1)
+        return max(
+            smartBruteForceSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
+            smartBruteForceSolver(actualWeight, actualPrice, n - 1)
         )
     }
 
@@ -89,8 +94,9 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
         if(actualWeight + items[n].weight > maxWeight) return branchAndBoundSolver(actualWeight, actualPrice, n - 1)
 
         //try it with and without current item
-        return max(branchAndBoundSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
-                   branchAndBoundSolver(actualWeight, actualPrice, n - 1)
+        return max(
+            branchAndBoundSolver(actualWeight + items[n].weight, actualPrice + items[n].price, n - 1),
+            branchAndBoundSolver(actualWeight, actualPrice, n - 1)
         )
     }
 
@@ -198,8 +204,93 @@ data class KnapsackProblem(val id: Int, val maxWeight: Int, var items: List<Item
     }
 
     enum class Method {
-        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX, DYNAMIC_PROGRAMMING_BY_PRICE, DYNAMIC_PROGRAMMING_BY_WEIGHT, FTPAS
+        BRUTEFORCE, SMART_BRUTEFORCE, BRANCH_AND_BOUND, GREEDY, REDUX, DYNAMIC_PROGRAMMING_BY_PRICE, DYNAMIC_PROGRAMMING_BY_WEIGHT, FTPAS,
+        SIMULATED_ANNEALING
     }
+
+
+    inner class SimulatedAnnealing(config: SimulatedAnnealingConfig) {
+        private val initialTemperature = config.initialTemp
+        private val minTemperature = config.minTemp
+        private val coolingCoefficient = config.coolingCoefficient
+        private val equilibrium = config.equilibrium
+
+        private var state = State()
+        private var bestState = State()
+
+        fun count(): Int {
+            simulateAnnealing()
+            return bestState.price
+        }
+
+
+        private fun simulateAnnealing() {
+            var innerCycle = 0
+            var temperature = initialTemperature
+
+            while(!isFrozen(temperature)) {
+                while(equilibrium(innerCycle)) {
+                    innerCycle++
+                    state = createNewState(temperature)
+                    if(state.price > bestState.price) bestState = state
+                }
+
+                temperature *= coolingCoefficient
+            }
+        }
+
+        private fun createNewState(temperature: Double): State {
+            var newState: State
+
+            do {
+                val position = ThreadLocalRandom.current().nextInt(0, items.size)
+                newState = State(state)
+                newState.changeBit(position)
+
+            } while(newState.weight > maxWeight)
+
+            if(newState.price > state.price) return newState
+
+            val delta = newState.price - state.price
+            val x = Random.nextDouble()
+            return if(x < exp(delta / temperature)) newState
+            else state
+        }
+
+        private fun isFrozen(temperature: Double) = temperature <= minTemperature
+
+        private fun equilibrium(cycle: Int) = cycle < (equilibrium * items.size)
+
+        inner class State() {
+            private val presentItems = MutableList(items.size) { false }
+            val weight: Int
+                get() = presentItems.foldIndexed(0) { index: Int, acc: Int, present: Boolean ->
+                    if(present) acc + items[index].weight
+                    else acc
+                }
+
+            val price: Int
+                get() = presentItems.foldIndexed(0) { index: Int, acc: Int, present: Boolean ->
+                    if(present) acc + items[index].price
+                    else acc
+                }
+
+            constructor(src: State) : this() {
+                src.presentItems.forEachIndexed { index: Int, present: Boolean ->
+                    presentItems[index] = present
+                }
+            }
+
+            fun changeBit(where: Int) {
+                presentItems[where] = !presentItems[where]
+            }
+
+        }
+
+    }
+
+
+    data class SimulatedAnnealingConfig(val initialTemp: Double, val minTemp: Double, val coolingCoefficient: Double, val equilibrium: Int)
 }
 
 
