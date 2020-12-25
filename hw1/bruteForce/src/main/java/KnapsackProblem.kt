@@ -1,4 +1,5 @@
 import java.lang.Integer.min
+import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.exp
 import kotlin.math.floor
@@ -11,7 +12,7 @@ data class KnapsackProblem(
 ) {
     private var iterations: ULong = 0U
 
-    fun compute(method: Method): KnapsackSolution<*> {
+    fun compute(method: Method, config: SimulatedAnnealingConfig? = null): KnapsackSolution<*> {
         val price: Int
         when(method) {
             Method.BRUTEFORCE -> {
@@ -42,6 +43,9 @@ data class KnapsackProblem(
             }
             Method.FTPAS -> {
                 price = fptas()
+            }
+            Method.SIMULATED_ANNEALING -> {
+                price = SimulatedAnnealing(config!!).count()
             }
         }
         return KnapsackSolution(price, iterations)
@@ -223,14 +227,12 @@ data class KnapsackProblem(
             return bestState.price
         }
 
-
         private fun simulateAnnealing() {
             var innerCycle = 0
             var temperature = initialTemperature
 
             while(!isFrozen(temperature)) {
-                while(equilibrium(innerCycle)) {
-                    innerCycle++
+                while(equilibrium(innerCycle++)) {
                     state = createNewState(temperature)
                     if(state.price > bestState.price) bestState = state
                 }
@@ -240,21 +242,17 @@ data class KnapsackProblem(
         }
 
         private fun createNewState(temperature: Double): State {
-            var newState: State
+            val position = ThreadLocalRandom.current().nextInt(0, items.size)
+            val newState = State(state)
+            newState.changeBit(position)
 
-            do {
-                val position = ThreadLocalRandom.current().nextInt(0, items.size)
-                newState = State(state)
-                newState.changeBit(position)
-
-            } while(newState.weight > maxWeight)
-
-            if(newState.price > state.price) return newState
-
-            val delta = newState.price - state.price
-            val x = Random.nextDouble()
-            return if(x < exp(delta / temperature)) newState
-            else state
+            if(newState.weight <= maxWeight) {
+                if(newState.price > state.price) return newState
+                val delta = newState.price - state.price
+                val x = Random.nextDouble()
+                return if(x < exp(delta / temperature)) newState
+                else state
+            } else return state
         }
 
         private fun isFrozen(temperature: Double) = temperature <= minTemperature
@@ -263,13 +261,15 @@ data class KnapsackProblem(
 
         inner class State() {
             private val presentItems = MutableList(items.size) { false }
-            val weight: Int
+            var weight: Int = 0
+                private set
                 get() = presentItems.foldIndexed(0) { index: Int, acc: Int, present: Boolean ->
                     if(present) acc + items[index].weight
                     else acc
                 }
 
-            val price: Int
+            var price: Int = 0
+                private set
                 get() = presentItems.foldIndexed(0) { index: Int, acc: Int, present: Boolean ->
                     if(present) acc + items[index].price
                     else acc
@@ -279,6 +279,8 @@ data class KnapsackProblem(
                 src.presentItems.forEachIndexed { index: Int, present: Boolean ->
                     presentItems[index] = present
                 }
+                weight = src.weight
+                price = src.price
             }
 
             fun changeBit(where: Int) {

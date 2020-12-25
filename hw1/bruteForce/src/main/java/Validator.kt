@@ -6,14 +6,19 @@ import kotlin.math.max
 @ExperimentalUnsignedTypes
 class Validator {
     @Suppress("MemberVisibilityCanBePrivate")
-    fun validate(base: String, method: KnapsackProblem.Method, input: String? = null, output: String? = null) {
+    fun validate(
+        base: String, method: KnapsackProblem.Method, input: String? = null, output: String? = null,
+        config: KnapsackProblem.SimulatedAnnealingConfig? = null, observingMethod: AnnealingConfigParameter? = null
+    ) {
         val inputReader = InputReader(base)
         val tasks = inputReader.initKnapsackProblems(input)
         //        val solutions = inputReader.prepareSolutions(output)
 
-        val stats = Statistics(base)
+        val stats = Statistics(base, config, observingMethod)
 
         //        if(tasks.size != solutions.size) throw RuntimeException("tasks and solutions are not equal")
+
+        val globalEpsilons = mutableListOf<Int>()
 
         tasks.forEachIndexed { i, task ->
             var iterations: ULong = 0u
@@ -33,20 +38,23 @@ class Validator {
             val timer = StopwatchCPU(StopwatchCPU.IN_MICROSECONDS)
 
             task.instances.forEachIndexed { j, problem ->
-                val result = problem.compute(method)
+                val result = problem.compute(method, config)
                 iterations += result.iterations
                 maxIterations = max(maxIterations, result.iterations)
                 val referencedPrice = references[j]
                 val computedPrice = result.solution as Int
                 val epsilon = calculateEpsilon(referencedPrice, computedPrice)
                 epsilons[j] = epsilon
-                //                print("${j + 1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon $method ")
-                //                if(referencedPrice == result.solution) println("OK") else println("FAIL")
+                print("${j + 1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon $method ")
+                if(referencedPrice == result.solution) println("OK") else println("FAIL")
             }
 
             val time = timer.elapsedTime()
-            val taskStats = TaskStats(task.file, nInstances, iterations, iterations / task.instances.size.toUInt(), maxIterations, method, time,
-                                      epsilons.average(), epsilons.max() ?: 0.0
+
+
+            val taskStats = TaskStats(
+                task.file, nInstances, iterations, iterations / task.instances.size.toUInt(), maxIterations, method, time, epsilons.average(),
+                epsilons.max() ?: 0.0
             )
 
             stats.printToFile(taskStats, Statistics.Stats.TIME)
@@ -61,7 +69,7 @@ class Validator {
         val inputReaderNR = InputReader(base)
         val tasks = inputReaderNR.initKnapsackProblems(input)
         val solutions = inputReaderNR.prepareSolutions(output)
-        val stats = Statistics(base)
+        //        val stats = Statistics(base, config, observingMethod)
 
         if(tasks.size != solutions.size) throw RuntimeException("tasks and solutions are not equal")
 
@@ -75,7 +83,7 @@ class Validator {
                 val referencedPrice = solutions[i].solutions[j].bestPrice
                 print("${j + 1}:\t res: ${(result.solution as Int)} ref: $referencedPrice time: $time mcs iterations: ${result.iterations}")
                 if(referencedPrice == result.solution) println("OK") else println("FAIL")
-                stats.printToFile(Histogram(method, task.file.name, result.iterations, time))
+                //                stats.printToFile(Histogram(method, task.file.name, result.iterations, time))
             }
         }
     }
@@ -87,7 +95,7 @@ class Validator {
         }
     }
 
-    private fun doSomething() {
+    fun doSomething() {
         var list: MutableList<Int>? = mutableListOf()
         repeat(10000000) {
             list?.add(it)
@@ -103,36 +111,45 @@ class Validator {
         println(i)
         sleep(1000)
     }
-
-    fun repeat(method: KnapsackProblem.Method) {
-        doSomething()
-        validate(Configuration.DATA_BASE_FOLDER_ZKW, method)
-        doSomething()
-        validate(Configuration.DATA_BASE_FOLDER_NK, method)
-        doSomething()
-        validate(Configuration.DATA_BASE_FOLDER_ZKC, method)
-    }
-
-    fun doFtpas(filename: String, epsilon: Double) {
-        Configuration.OUTPUT_FILENAME_FTPAS = filename
-        Configuration.FPTAS_EPSILON = epsilon
-        doSomething()
-        validate(Configuration.DATA_BASE_FOLDER_NK, KnapsackProblem.Method.FTPAS)
-        doSomething()
-        validate(Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.FTPAS)
-        doSomething()
-        validate(Configuration.DATA_BASE_FOLDER_ZKC, KnapsackProblem.Method.FTPAS)
-    }
 }
 
 @ExperimentalUnsignedTypes
 fun main() {
     with(Validator()) {
-        Configuration.ACTUAL_PARAMETER = "k/heavy"
-        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}", KnapsackProblem.Method.GREEDY)
-        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.DYNAMIC_PROGRAMMING_BY_PRICE)
-        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.BRANCH_AND_BOUND)
-        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.GREEDY)
-        //        validate("../../hw3/example/${Configuration.ACTUAL_PARAMETER}/corr", KnapsackProblem.Method.SMART_BRUTEFORCE)
+        //        doSomething()
+        //        doSomething()
+        repeat(10) {
+            //100, 20, 0.8, 40
+            var config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.2, 40)
+            validate(
+                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
+                AnnealingConfigParameter.EQUILIBRIUM
+            )
+            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.99, 40)
+            validate(
+                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
+                AnnealingConfigParameter.EQUILIBRIUM
+            )
+            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 20)
+            //            validate(
+            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
+            //                AnnealingConfigParameter.EQUILIBRIUM
+            //            )
+            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 40)
+            //            validate(
+            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
+            //                AnnealingConfigParameter.EQUILIBRIUM
+            //            )
+            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 80)
+            //            validate(
+            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
+            //                AnnealingConfigParameter.EQUILIBRIUM
+            //            )
+            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 160)
+            //            validate(
+            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
+            //                AnnealingConfigParameter.EQUILIBRIUM
+            //            )
+        }
     }
 }
