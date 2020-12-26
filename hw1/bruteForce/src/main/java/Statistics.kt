@@ -68,7 +68,7 @@ class Statistics(
             AnnealingConfigParameter.INITIAL_TEMPERATURE -> config?.initialTemp
             AnnealingConfigParameter.MIN_TEMPERATURE -> config?.minTemp
             AnnealingConfigParameter.COOLING_COEFFICIENT -> config?.coolingCoefficient
-            AnnealingConfigParameter.EQUILIBRIUM -> config?.equilibrium
+            AnnealingConfigParameter.EQUILIBRIUM -> config?.innerCycle
             else -> null
         }
     }

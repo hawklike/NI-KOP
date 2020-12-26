@@ -217,7 +217,7 @@ data class KnapsackProblem(
         private val initialTemperature = config.initialTemp
         private val minTemperature = config.minTemp
         private val coolingCoefficient = config.coolingCoefficient
-        private val equilibrium = config.equilibrium
+        private val equilibrium = config.innerCycle
 
         private var state = State()
         private var bestState = State()
@@ -228,11 +228,13 @@ data class KnapsackProblem(
         }
 
         private fun simulateAnnealing() {
-            var innerCycle = 0
             var temperature = initialTemperature
 
-            while(!isFrozen(temperature)) {
-                while(equilibrium(innerCycle++)) {
+            while(temperature > minTemperature) {
+                var innerCycle = 0
+
+                while(innerCycle++ < equilibrium) {
+                    iterations++
                     state = createNewState(temperature)
                     if(state.price > bestState.price) bestState = state
                 }
@@ -246,45 +248,42 @@ data class KnapsackProblem(
             val newState = State(state)
             newState.changeBit(position)
 
-            if(newState.weight <= maxWeight) {
-                if(newState.price > state.price) return newState
-                val delta = newState.price - state.price
-                val x = Random.nextDouble()
-                return if(x < exp(delta / temperature)) newState
-                else state
-            } else return state
+            if(newState.weight > maxWeight) return state
+            if(newState.price > state.price) return newState
+
+            val delta = newState.price - state.price
+            val x = Random.nextDouble()
+            return if(x < exp(delta / temperature)) newState
+            else state
         }
 
-        private fun isFrozen(temperature: Double) = temperature <= minTemperature
-
-        private fun equilibrium(cycle: Int) = cycle < (equilibrium * items.size)
 
         inner class State() {
             private val presentItems = MutableList(items.size) { false }
             var weight: Int = 0
                 private set
-                get() = presentItems.foldIndexed(0) { index: Int, acc: Int, present: Boolean ->
-                    if(present) acc + items[index].weight
-                    else acc
-                }
-
             var price: Int = 0
                 private set
-                get() = presentItems.foldIndexed(0) { index: Int, acc: Int, present: Boolean ->
-                    if(present) acc + items[index].price
-                    else acc
-                }
+
 
             constructor(src: State) : this() {
                 src.presentItems.forEachIndexed { index: Int, present: Boolean ->
                     presentItems[index] = present
                 }
-                weight = src.weight
-                price = src.price
+                this.weight = src.weight
+                this.price = src.price
             }
 
             fun changeBit(where: Int) {
                 presentItems[where] = !presentItems[where]
+                if(presentItems[where]) {
+                    weight += items[where].weight
+                    price += items[where].price
+                } else {
+                    weight -= items[where].weight
+                    price -= items[where].price
+                }
+
             }
 
         }
@@ -292,7 +291,7 @@ data class KnapsackProblem(
     }
 
 
-    data class SimulatedAnnealingConfig(val initialTemp: Double, val minTemp: Double, val coolingCoefficient: Double, val equilibrium: Int)
+    data class SimulatedAnnealingConfig(val initialTemp: Double, val minTemp: Double, val coolingCoefficient: Double, val innerCycle: Int)
 }
 
 

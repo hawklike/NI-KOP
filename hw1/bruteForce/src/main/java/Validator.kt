@@ -18,9 +18,8 @@ class Validator {
 
         //        if(tasks.size != solutions.size) throw RuntimeException("tasks and solutions are not equal")
 
-        val globalEpsilons = mutableListOf<Int>()
 
-        tasks.forEachIndexed { i, task ->
+        tasks.forEachIndexed { _, task ->
             var iterations: ULong = 0u
             var maxIterations: ULong = 0u
 
@@ -45,8 +44,9 @@ class Validator {
                 val computedPrice = result.solution as Int
                 val epsilon = calculateEpsilon(referencedPrice, computedPrice)
                 epsilons[j] = epsilon
-                print("${j + 1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon $method ")
-                if(referencedPrice == result.solution) println("OK") else println("FAIL")
+                //                println("iterations: $iterations")
+                //                print("${j + 1}:\t res: $computedPrice ref: $referencedPrice eps: $epsilon $method ")
+                //                if(referencedPrice == result.solution) println("OK") else println("FAIL")
             }
 
             val time = timer.elapsedTime()
@@ -116,40 +116,15 @@ class Validator {
 @ExperimentalUnsignedTypes
 fun main() {
     with(Validator()) {
-        //        doSomething()
-        //        doSomething()
-        repeat(10) {
-            //100, 20, 0.8, 40
-            var config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.2, 40)
+        doSomething()
+        doSomething()
+        //1000, 20, 0.995, 10
+        repeat(1) {
+            var config = KnapsackProblem.SimulatedAnnealingConfig(500.0, 1.0, 0.9, 100)
             validate(
                 Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
                 AnnealingConfigParameter.EQUILIBRIUM
             )
-            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.99, 40)
-            validate(
-                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
-                AnnealingConfigParameter.EQUILIBRIUM
-            )
-            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 20)
-            //            validate(
-            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
-            //                AnnealingConfigParameter.EQUILIBRIUM
-            //            )
-            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 40)
-            //            validate(
-            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
-            //                AnnealingConfigParameter.EQUILIBRIUM
-            //            )
-            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 80)
-            //            validate(
-            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
-            //                AnnealingConfigParameter.EQUILIBRIUM
-            //            )
-            //            config = KnapsackProblem.SimulatedAnnealingConfig(100.0, 20.0, 0.8, 160)
-            //            validate(
-            //                Configuration.DATA_BASE_FOLDER_ZKW, KnapsackProblem.Method.SIMULATED_ANNEALING, "custom.dat", "", config,
-            //                AnnealingConfigParameter.EQUILIBRIUM
-            //            )
         }
     }
 }
